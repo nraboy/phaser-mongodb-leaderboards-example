@@ -1,7 +1,11 @@
 var MainScene = new Phaser.Class({
     Extends: Phaser.Scene,
-    initialize: function MainScene() {
+    initialize: function() {
         Phaser.Scene.call(this, { key: "MainScene" });
+    },
+    init: function(data) {
+        this.username = data.username;
+        this.score = data.score;
     },
     preload: function() {
         this.load.image("leaf", "leaf.png");
@@ -13,7 +17,8 @@ var MainScene = new Phaser.Class({
         this.player = this.physics.add.sprite(640, 650, "box");
         this.player.setScale(0.25);
         this.player.setDepth(1);
-        this.player.setData("score", 0);
+        this.player.setData("score", this.score);
+        this.player.setData("username", this.username);
 
         this.leafGroup = this.physics.add.group({
             defaultKey: "leaf",
@@ -34,10 +39,10 @@ var MainScene = new Phaser.Class({
 
         this.physics.add.collider(this.player, this.leafGroup, (player, leaf) => {
             if (leaf.active) {
-                let score = player.getData("score");
-                score++;
-                player.setData("score", score);
-                this.scoreText.setText("SCORE: " + score);
+                this.score = player.getData("score");
+                this.score++;
+                player.setData("score", this.score);
+                this.scoreText.setText("SCORE: " + this.score);
                 this.leafGroup.killAndHide(leaf);
             }
         });
@@ -45,7 +50,10 @@ var MainScene = new Phaser.Class({
         this.physics.add.collider(this.player, this.bombGroup, (player, bomb) => {
             if (bomb.active) {
                 this.bombGroup.killAndHide(bomb);
-                this.scene.start("GameOverScene", { "username": "nraboy", "score": this.player.getData("score") });
+                this.scene.start("GameOverScene", { 
+                    "username": this.player.getData("username"), 
+                    "score": this.player.getData("score") 
+                });
             }
         });
 
