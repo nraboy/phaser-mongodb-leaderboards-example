@@ -22,16 +22,20 @@ var GameOverScene = new Phaser.Class({
             this.globalScores = await fetch("http://localhost:3000/get")
                 .then(response => response.json());
 
-            // this.nearbyScores = await fetch("http://localhost:3000/getNearLocation?latitude=&longitude=")
-            //     .then(response => response.json());
+            this.nearbyScores = await fetch(`http://localhost:3000/getNearLocation?latitude=${this.player.location.coordinates[1]}&longitude=${this.player.location.coordinates[0]}`)
+                .then(response => response.json());
 
             this.add.text(10, 100, "GLOBAL HIGH SCORES", { fontSize: 40, color: '#000000', fontStyle: "bold", backgroundColor: "#FFFFFF", padding: 10 });
-            this.add.text(400, 100, "NEARBY HIGH SCORES", { fontSize: 40, color: '#000000', fontStyle: "bold", backgroundColor: "#FFFFFF", padding: 10 });
+            this.add.text(600, 100, "NEARBY HIGH SCORES", { fontSize: 40, color: '#000000', fontStyle: "bold", backgroundColor: "#FFFFFF", padding: 10 });
 
             this.add.text(10, 10, "YOUR SCORE: " + this.player.score, { fontSize: 40, color: '#000000', fontStyle: "bold", backgroundColor: "#FFFFFF", padding: 10 });
 
             for(let i = 0; i < this.globalScores.length; i++) {
                 this.add.text(10, 100 * (i + 2), `${this.globalScores[i].username}: ${this.globalScores[i].score}`, { fontSize: 40, color: '#000000', fontStyle: "bold", backgroundColor: "#FFFFFF", padding: 10 });
+            }
+
+            for(let i = 0; i < this.nearbyScores.length; i++) {
+                this.add.text(600, 100 * (i + 2), `${this.nearbyScores[i].username}: ${this.nearbyScores[i].score}`, { fontSize: 40, color: '#000000', fontStyle: "bold", backgroundColor: "#FFFFFF", padding: 10 });
             }
 
             this.retryButton = this.add.text(1125, 640, "RETRY", { fontSize: 40, color: '#000000', fontStyle: "bold", backgroundColor: "#FFFFFF", padding: 10 });
