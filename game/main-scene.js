@@ -6,6 +6,7 @@ var MainScene = new Phaser.Class({
     init: function(data) {
         this.username = data.username;
         this.score = data.score;
+        this.location = data.location;
     },
     preload: function() {
         this.load.image("leaf", "leaf.png");
@@ -52,7 +53,8 @@ var MainScene = new Phaser.Class({
                 this.bombGroup.killAndHide(bomb);
                 this.scene.start("GameOverScene", { 
                     "username": this.player.getData("username"), 
-                    "score": this.player.getData("score") 
+                    "score": this.player.getData("score"),
+                    "location": this.location
                 });
             }
         });

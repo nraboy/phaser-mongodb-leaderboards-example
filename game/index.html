@@ -27,7 +27,26 @@
                 scene: [InformationScene, MainScene, GameOverScene]
             };
 
-            const game = new Phaser.Game(phaserConfig);
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    if(!position.coords || !position.coords.longitude) {
+                        position.coords.latitude = 0;
+                        position.coords.longitude = 0;
+                    }
+                    const game = new Phaser.Game(phaserConfig);
+                    game.scene.start("InformationScene", {
+                        location: {
+                            type: "Point",
+                            coordinates: [
+                                parseFloat(position.coords.longitude.toFixed(1)),
+                                parseFloat(position.coords.latitude.toFixed(1))
+                            ]
+                        }
+                    })
+                });
+            } else {
+                console.error("Geolocation is not supported by this browser!");
+            }
 
         </script>
     </body>
